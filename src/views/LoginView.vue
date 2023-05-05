@@ -15,6 +15,8 @@
 
 <script>
 import axios from "axios";
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:8000";
 export default {
   data: () => ({
     user: {},
@@ -25,8 +27,10 @@ export default {
   }),
   methods: {
     login() {
-      axios.post("http://localhost:8000/login").then((response) => {
-        console.log(response);
+      axios.get("/sanctum/csrf-cookie").then(() => {
+        axios.post("/login", this.form).then((response) => {
+          console.log(response);
+        });
       });
     },
   },
