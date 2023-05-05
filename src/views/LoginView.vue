@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data: () => ({
     user: {},
@@ -24,7 +25,9 @@ export default {
   }),
   methods: {
     login() {
-      console.log("login");
+      axios.post("http://localhost:8000/login").then((response) => {
+        console.log(response);
+      });
     },
   },
 };
