@@ -1,12 +1,11 @@
 <template>
   <div>
-    <pre>
-      {{ user }}
-    </pre>
-    <form @submit.prevent="login">
+    <div>Hola {{ user.name }}</div>
+    <button v-if="user.email" @click="logout">Logout</button>
+    <form v-else @submit.prevent="login">
       <input v-model="form.email" type="email" placeholder="email" />
       <br />
-      <input type="password" name="password" />
+      <input v-model="form.password" type="password" name="password" />
       <br />
       <button>Login</button>
     </form>
@@ -25,12 +24,24 @@ export default {
       password: "",
     },
   }),
+  created() {
+    axios.get("/sanctum/csrf-cookie").then(() => {});
+    this.getUSer();
+  },
   methods: {
+    getUSer() {
+      axios.get("/api/user").then((response) => {
+        this.user = response.data;
+      });
+    },
+    logout() {
+      axios.post("/logout").then(() => {
+        this.user = {};
+      });
+    },
     login() {
-      axios.get("/sanctum/csrf-cookie").then(() => {
-        axios.post("/login", this.form).then((response) => {
-          console.log(response);
-        });
+      axios.post("/login", this.form).then(() => {
+        this.getUSer();
       });
     },
   },
