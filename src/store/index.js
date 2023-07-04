@@ -2,7 +2,7 @@ import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 
 Vue.use(Vuex);
 

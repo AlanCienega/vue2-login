@@ -19,7 +19,7 @@ export default {
   methods: {
     async login() {
       await this.$store.dispatch("login", this.form);
-      return this.$router.replace("/"); // redirect
+      return this.$router.replace("/");
     },
   },
 };
