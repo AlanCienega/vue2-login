@@ -4,8 +4,14 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
       <template v-if="$store.state.auth">
-        <span> {{ $store.state.user.name }} </span> |
-        <button @click="logout">Logout</button>
+        <span v-if="$store.state.isImpersonated">
+          <span> {{ $store.state.impersonatedUser.name }} </span>
+          <button @click="stopImpersonating">Stop impersonation</button>
+        </span>
+        <span v-else>
+          <span> {{ $store.state.user.name }} </span> |
+          <button @click="logout">Logout</button>
+        </span>
       </template>
       <template v-else>
         <router-link to="/login">Login</router-link>
@@ -20,6 +26,9 @@ export default {
     logout() {
       this.$store.dispatch("logout");
       return this.$router.replace("/login");
+    },
+    stopImpersonating() {
+      this.$store.dispatch("stopImpersonating");
     },
   },
 };

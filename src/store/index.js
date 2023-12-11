@@ -10,17 +10,24 @@ export default new Vuex.Store({
   state: {
     user: null,
     auth: false,
+    impersonatedUser: null,
+    isImpersonated: false,
     users: [],
-    response_message: "",
   },
   getters: {
     fetchUser: (state) => state.user,
     isAuthenticated: (state) => state.auth,
+    fetchImpersonatedUser: (state) => state.impersonatedUser,
+    isImpersonating: (state) => state.isImpersonated,
   },
   mutations: {
     SET_USER(state, user) {
       state.user = user;
       state.auth = !!user;
+    },
+    SET_IMPERSONATED_USER(state, user) {
+      state.impersonatedUser = user;
+      state.isImpersonated = !!user;
     },
     SET_USERS(state, users) {
       state.users = users;
@@ -52,6 +59,15 @@ export default new Vuex.Store({
       } catch {
         return commit("SET_USERS", []);
       }
+    },
+    async impersonateUser({ commit }, userId) {
+      const response = await axios.post(`api/impersonate/${userId}`);
+      commit("SET_IMPERSONATED_USER", response.data.user);
+    },
+
+    async stopImpersonating({ commit, state }) {
+      await axios.post(`api/stop-impersonating/${state.impersonatedUser.id}`);
+      commit("SET_IMPERSONATED_USER", null);
     },
   },
   modules: {},
